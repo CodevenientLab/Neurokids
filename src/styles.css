@@ -36,14 +36,13 @@ select { font: inherit; }
 .site-header { border-bottom: 1px solid var(--line); }
 .nav { min-height: 5rem; display: flex; justify-content: space-between; align-items: center; gap: 1.25rem; padding-block: .7rem; }
 .nav nav { display: flex; align-items: center; gap: clamp(1.1rem, 3vw, 2.5rem); }
-.nav nav a { text-decoration: none; font-size: .94rem; font-weight: 600; }
+.nav nav a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; font-size: .94rem; font-weight: 600; }
 .nav nav a:hover { text-decoration: underline; }
 .brand { display: inline-flex; align-items: center; gap: .65rem; width: fit-content; color: var(--ink); font: 500 1.32rem/1.12 var(--serif); text-decoration: none; }
 .brand img { object-fit: contain; border-radius: .35rem; background: #fff; }
 .brand small { display: block; color: var(--muted); font: 500 .82rem/1.35 system-ui, sans-serif; margin-top: .2rem; }
 .button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .7rem 1.15rem; border: 1px solid transparent; border-radius: .35rem; background: var(--green); color: white; font-weight: 650; text-decoration: none; text-align: center; }
 .button:hover { background: #123f37; }
-.button.compact { min-height: 44px; font-size: .9rem; padding-inline: .95rem; }
 .text-link { font-weight: 650; }
 
 .hero {
@@ -158,33 +157,51 @@ details p { margin: .65rem 0 0; }
     background: linear-gradient(0deg, rgb(12 38 35 / .98) 6%, rgb(12 38 35 / .93) 42%, rgb(12 38 35 / .75) 63%, rgb(12 38 35 / .1) 100%);
   }
   .before-booking dl > div + div { padding-top: .85rem; border-top: 1px solid var(--line); }
-  .nav { display: grid; grid-template-columns: auto auto; gap: .75rem .45rem; }
-  .nav nav { grid-row: 2; grid-column: 1 / -1; flex-wrap: wrap; gap: .75rem 1.25rem; }
+  .nav { flex-wrap: wrap; align-items: center; gap: .15rem 1.5rem; padding-block: .55rem; }
+  .nav nav { flex-wrap: wrap; gap: 0 1.15rem; }
   .brand { font-size: 1.12rem; gap: .3rem; }
   .brand small { font-size: .74rem; }
   .brand img { width: 37px; height: 37px; }
-  .button.compact { padding-inline: .55rem; justify-self: end; }
 }
 @media (max-width: 380px) {
   .concerns { grid-template-columns: 1fr; }
 }
 
+@keyframes cartoon-enter {
+  0% { opacity: .55; transform: translateY(.6rem) rotate(-10deg) scale(1.13, .68); }
+  44% { opacity: 1; transform: translateY(-1.15rem) rotate(12deg) scale(.9, 1.22); }
+  67% { transform: translateY(.15rem) rotate(-6deg) scale(1.17, .82); }
+  84% { transform: translateY(-.25rem) rotate(3deg) scale(.97, 1.06); }
+  100% { transform: none; }
+}
+
 @keyframes sticker-hop {
   0%, 100% { transform: none; }
-  35% { transform: translateY(-12%) rotate(-10deg) scale(1.16); }
-  65% { transform: translateY(3%) rotate(5deg) scale(.97); }
+  15% { transform: translateY(.12rem) scale(1.14, .84); }
+  43% { transform: translateY(-16%) rotate(var(--hop-tilt, -12deg)) scale(.96, 1.2); }
+  68% { transform: translateY(3%) rotate(5deg) scale(1.13, .9); }
+  85% { transform: translateY(-3%) rotate(-3deg) scale(.98, 1.04); }
 }
 
 @keyframes example-in {
-  from { opacity: .5; transform: translateY(.25rem); }
-  to { opacity: 1; transform: none; }
+  0% { opacity: .45; transform: translateX(-.55rem) scale(.86, .79); }
+  60% { opacity: 1; transform: translateX(.15rem) scale(1.035, 1.12); }
+  80% { transform: scale(.985, .95); }
+  100% { transform: none; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .milestone-examples { animation: example-in .24s ease-out; }
+  .visit-steps li[data-entered="true"] .visit-art {
+    animation: cartoon-enter .78s cubic-bezier(.25,.7,.36,1) backwards;
+  }
+  .visit-steps li:nth-child(2) .visit-art { animation-delay: .08s; --hop-tilt: 12deg; }
+  .visit-steps li:nth-child(3) .visit-art { animation-delay: .16s; }
+  .milestone-examples li { transform-origin: left center; animation: example-in .48s ease-out backwards; }
+  .milestone-examples li:nth-child(2) { animation-delay: .07s; }
+  .milestone-examples li:nth-child(3) { animation-delay: .14s; }
   .button { transition: background-color .18s ease; }
 
   @media (hover: hover) {
-    .visit-steps li:hover .visit-art img { animation: sticker-hop .64s ease-in-out; }
+    .visit-steps li:hover .visit-art img { animation: sticker-hop .72s cubic-bezier(.25,.65,.35,1); }
   }
 }

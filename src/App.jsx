@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import logo from './logo.webp'
 import playSmall from './play-640.webp'
 import playLarge from './play-1120.webp'
@@ -127,6 +127,25 @@ function Concerns() {
 }
 
 function FirstVisit() {
+  const stepsRef = useRef(null)
+  const [entered, setEntered] = useState([])
+
+  useEffect(() => {
+    if (!('IntersectionObserver' in window)) return
+
+    const threshold = 0.65
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.intersectionRatio >= threshold)
+      if (visible.length === 0) return
+
+      visible.forEach(({ target }) => observer.unobserve(target))
+      setEntered((previous) => [...previous, ...visible.map(({ target }) => target.dataset.step)])
+    }, { threshold })
+
+    for (const item of stepsRef.current.children) observer.observe(item)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <section id="first-visit" className="section first-visit" aria-labelledby="first-visit-title">
       <div className="wrap">
@@ -134,9 +153,9 @@ function FirstVisit() {
           <h2 id="first-visit-title">What happens at the first visit?</h2>
           <p>Here’s what a developmental assessment may look like. The activities depend on your child’s age and what you’d like help with.</p>
         </div>
-        <ol className="visit-steps" role="list">
+        <ol className="visit-steps" role="list" ref={stepsRef}>
           {visitSteps.map(({ title, art, text }) => (
-            <li key={title}>
+            <li key={title} data-step={title} data-entered={entered.includes(title)}>
               <div className="visit-art">
                 <img src={art} width="480" height="255" alt="" loading="lazy" />
               </div>
@@ -297,7 +316,6 @@ export default function App() {
             <a href="#first-visit">First visit</a>
             <a href="#visit">Locations</a>
           </nav>
-          <a className="button compact" href="#book">Appointments</a>
         </div>
       </header>
       <main id="main" tabIndex={-1}>
