@@ -87,9 +87,6 @@ function Brand() {
 
 function Header() {
   const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const menuRef = useRef(null)
-  const triggerRef = useRef(null)
 
   useEffect(() => {
     const update = () => setScrolled(window.scrollY >= 56)
@@ -98,49 +95,10 @@ function Header() {
     return () => window.removeEventListener('scroll', update)
   }, [])
 
-  useEffect(() => {
-    if (!menuOpen) return
-
-    const closeOutside = (event) => {
-      if (!menuRef.current.contains(event.target)) setMenuOpen(false)
-    }
-    const closeOnEscape = (event) => {
-      if (event.key !== 'Escape') return
-      event.preventDefault()
-      setMenuOpen(false)
-      triggerRef.current.focus()
-    }
-
-    document.addEventListener('pointerdown', closeOutside)
-    document.addEventListener('keydown', closeOnEscape)
-    return () => {
-      document.removeEventListener('pointerdown', closeOutside)
-      document.removeEventListener('keydown', closeOnEscape)
-    }
-  }, [menuOpen])
-
   return (
     <header className="site-header" data-scrolled={scrolled}>
-      <div className="wrap nav">
+      <div className="wrap header-inner">
         <Brand />
-        <div className="site-menu" ref={menuRef}>
-          <button
-            className="menu-trigger"
-            type="button"
-            ref={triggerRef}
-            aria-expanded={menuOpen}
-            aria-controls="main-navigation"
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            <span className="menu-label">Menu</span>
-            <span className="menu-icon" aria-hidden="true" />
-          </button>
-          <nav id="main-navigation" aria-label="Main navigation" hidden={!menuOpen}>
-            <a href="#help" onClick={() => setMenuOpen(false)}>Assessments</a>
-            <a href="#first-visit" onClick={() => setMenuOpen(false)}>First visit</a>
-            <a href="#visit" onClick={() => setMenuOpen(false)}>Locations</a>
-          </nav>
-        </div>
       </div>
     </header>
   )
