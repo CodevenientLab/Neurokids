@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import logo from './logo.webp'
-import playSmall from './play-640.webp'
+import playMobile from './play-mobile-640.webp'
+import playMobileDense from './play-mobile-960.webp'
 import playLarge from './play-1120.webp'
+import playWide from './play-1920.webp'
 import listenArt from './visit-art/listen.webp'
 import playArt from './visit-art/play.webp'
 import nextStepsArt from './visit-art/next-steps.webp'
@@ -78,7 +80,7 @@ function Brand() {
   return (
     <a className="brand" href="#top">
       <img src={logo} width="44" height="44" alt="" />
-      <span>Genesis NeuroKids<small>Developmental paediatrics</small></span>
+      <span>Genesis NeuroKids Centre<small>Developmental care services</small></span>
     </a>
   )
 }
@@ -97,16 +99,22 @@ function Hero() {
           </div>
         </div>
       </div>
-      <div className="hero-photo">
+      <picture className="hero-photo">
+        <source
+          media="(max-width: 650px)"
+          srcSet={`${playMobile} 640w, ${playMobileDense} 960w`}
+          sizes="100vw"
+        />
         <img
           src={playLarge}
-          srcSet={`${playSmall} 640w, ${playLarge} 1120w`}
+          srcSet={`${playLarge} 1120w, ${playWide} 1920w`}
           sizes="100vw"
           width="1120"
           height="804"
+          fetchpriority="high"
           alt="A child’s hands exploring wooden blocks"
         />
-      </div>
+      </picture>
     </section>
   )
 }
@@ -320,6 +328,14 @@ export default function App() {
       </header>
       <main id="main" tabIndex={-1}>
         <Hero />
+        <div className="care-band">
+          <ul className="wrap" aria-label="Our approach">
+            <li>Developmental assessments</li>
+            <li>Early intervention</li>
+            <li>Family-centred care</li>
+          </ul>
+        </div>
+        <Doctor />
         <section className="wrap before-booking" aria-label="Before you book">
           <dl>
             {questions.map(({ title, text, href, link }) => (
@@ -332,7 +348,6 @@ export default function App() {
         </section>
         <FirstVisit />
         <Concerns />
-        <Doctor />
         <Milestones />
         <Locations />
         <Booking />
