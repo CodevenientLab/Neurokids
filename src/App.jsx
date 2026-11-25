@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import logo from './logo.webp'
+import playSmall from './play-640.webp'
+import playLarge from './play-1120.webp'
 import listenArt from './visit-art/listen.webp'
 import playArt from './visit-art/play.webp'
 import nextStepsArt from './visit-art/next-steps.webp'
@@ -52,12 +54,6 @@ const visitSteps = [
   },
 ]
 
-const everydaySkills = [
-  ['Talk', 'Asking for a toy or following a simple instruction.'],
-  ['Play', 'Taking turns or joining in a game.'],
-  ['Learn', 'Getting started on a task or following its steps.'],
-]
-
 const milestones = [
   ['12 months', ['Waves goodbye', 'Uses a special name for a parent', 'Pulls up to stand']],
   ['18 months', ['Tries at least three words besides names for parents', 'Walks independently', 'Imitates chores you do at home']],
@@ -67,9 +63,9 @@ const milestones = [
 ]
 
 const questions = [
-  ['What should I ask when I book?', 'Ask which location has availability, whether you need a referral, and what to bring to your first appointment.'],
-  ['What are the fees? Can I use medical aid?', 'Ask the practice about the consultation fee and how payment works before you book. Check your cover directly with your medical aid.'],
-  ['How do I know my appointment is confirmed?', 'The practice will confirm the date, time and location with you directly.'],
+  { title: 'What happens at the first visit?', text: 'You’ll talk about your child. The doctor may use play or simple activities to see how they’re developing.', href: '#first-visit', link: 'See the first-visit guide' },
+  { title: 'Do we need a referral?', text: 'Tell the practice if you’re booking directly or were referred. Ask what they need when you enquire.' },
+  { title: 'What will it cost?', text: 'Ask the practice for the fee, then check what your medical aid covers before you book.' },
 ]
 
 function whatsappLink(location) {
@@ -89,18 +85,27 @@ function Brand() {
 
 function Hero() {
   return (
-    <section className="hero wrap" aria-labelledby="hero-title">
-      <div className="hero-copy">
-        <p className="kicker">Developmental paediatrics in Johannesburg</p>
-        <h1 id="hero-title">Questions about your child’s development?</h1>
-        <p className="lead">Dr N. A. Thambe sees children for developmental assessments and early intervention. An appointment is a place to talk through what you’ve noticed at home or at school and discuss what support may help.</p>
-        <div className="actions">
-          <a className="button" href="#book">Ask about an appointment</a>
-          <a className="text-link" href={PHONE_URL}>Call {PHONE}</a>
+    <section className="hero" aria-labelledby="hero-title">
+      <div className="hero-content wrap">
+        <div className="hero-copy">
+          <p className="kicker">Developmental paediatrics in Johannesburg</p>
+          <h1 id="hero-title">Understand how your child is developing</h1>
+          <p className="lead">A developmental assessment with Dr N. A. Thambe helps you talk through concerns about speech, play or learning and discuss what support could help next.</p>
+          <div className="actions">
+            <a className="button" href={whatsappLink('')} target="_blank" rel="noopener noreferrer">Ask about an assessment on WhatsApp</a>
+            <a className="text-link" href={PHONE_URL}>Call {PHONE}</a>
+          </div>
         </div>
       </div>
-      <div className="hero-identity">
-        <img src={logo} width="370" height="315" alt="Genesis NeuroKids Centre" />
+      <div className="hero-photo">
+        <img
+          src={playLarge}
+          srcSet={`${playSmall} 640w, ${playLarge} 1120w`}
+          sizes="100vw"
+          width="1120"
+          height="804"
+          alt="A child’s hands exploring wooden blocks"
+        />
       </div>
     </section>
   )
@@ -110,20 +115,13 @@ function Concerns() {
   return (
     <section id="help" className="section wrap">
       <div className="section-intro">
-        <h2>What the centre helps with</h2>
-        <p>A developmental assessment looks at what your child already does comfortably and where everyday tasks are harder. Here are some reasons families ask for an assessment.</p>
+        <h2>When to get in touch</h2>
+        <p>You can book an assessment to discuss something you’ve noticed, or a concern raised by your child’s teacher.</p>
       </div>
       <dl className="concerns">
         {concerns.map(([title, text]) => <div key={title}><dt>{title}</dt><dd>{text}</dd></div>)}
       </dl>
-      <div className="skills-guide">
-        <h3>What those skills look like in everyday life</h3>
-        <dl className="skill-examples">
-          {everydaySkills.map(([title, example]) => (
-            <div key={title}><dt>{title}</dt><dd>{example}</dd></div>
-          ))}
-        </dl>
-      </div>
+
     </section>
   )
 }
@@ -274,10 +272,13 @@ function Footer() {
             <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
           </div>
         </div>
-        <p className="footnote">The information on this site is general and cannot diagnose a condition or replace an assessment.</p>
         <details className="footnote">
           <summary>Website privacy</summary>
-          <p>This site uses no analytics or cookies. Your hospital selection stays on the page until you open WhatsApp, where it appears in a draft message. If you send the message, WhatsApp and the practice receive it. Contact the practice using the email above for questions about how it handles enquiries.</p>
+          <p>This site uses no analytics or cookies. The site only passes your hospital preference to WhatsApp when you choose to open a draft. If you send that draft, WhatsApp and the practice receive your message. Contact the practice using the email above with any privacy questions.</p>
+        </details>
+        <details className="footnote">
+          <summary>Website terms</summary>
+          <p>The information here is general and cannot replace a developmental assessment. The practice confirms appointments and fees directly. For urgent care, contact a healthcare provider or local emergency services.</p>
         </details>
       </div>
     </footer>
@@ -301,17 +302,21 @@ export default function App() {
       </header>
       <main id="main" tabIndex={-1}>
         <Hero />
-        <Concerns />
+        <section className="wrap before-booking" aria-label="Before you book">
+          <dl>
+            {questions.map(({ title, text, href, link }) => (
+              <div key={title}>
+                <dt>{title}</dt>
+                <dd>{text}{href && <a className="text-link" href={href}>{link}</a>}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
         <FirstVisit />
+        <Concerns />
         <Doctor />
         <Milestones />
         <Locations />
-        <section className="section wrap split faq" aria-labelledby="faq-title">
-          <h2 id="faq-title">Before you book</h2>
-          <div>{questions.map(([question, answer]) => (
-            <details key={question}><summary>{question}</summary><p>{answer}</p></details>
-          ))}</div>
-        </section>
         <Booking />
       </main>
       <Footer />

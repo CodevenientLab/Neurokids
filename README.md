@@ -20,3 +20,5 @@ WhatsApp links open a draft with the selected hospital when one is chosen. The s
 ## GitHub Pages
 
 Run `npm run build:pages` and commit the updated `docs/` folder alongside the source. GitHub Pages publishes from `main`, using `/docs` as its source.
+
+The illustrative hero photograph is [Kid Playing Wooden Toys by Ivan S](https://www.pexels.com/photo/kid-playing-wooden-toys-8504533/), used under the [Pexels licence](https://www.pexels.com/license/). It does not depict a patient or the practice.
