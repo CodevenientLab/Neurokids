@@ -85,9 +85,70 @@ function Brand() {
   )
 }
 
+function Header() {
+  const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef(null)
+  const triggerRef = useRef(null)
+
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY >= 56)
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
+  }, [])
+
+  useEffect(() => {
+    if (!menuOpen) return
+
+    const closeOutside = (event) => {
+      if (!menuRef.current.contains(event.target)) setMenuOpen(false)
+    }
+    const closeOnEscape = (event) => {
+      if (event.key !== 'Escape') return
+      event.preventDefault()
+      setMenuOpen(false)
+      triggerRef.current.focus()
+    }
+
+    document.addEventListener('pointerdown', closeOutside)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closeOutside)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [menuOpen])
+
+  return (
+    <header className="site-header" data-scrolled={scrolled}>
+      <div className="wrap nav">
+        <Brand />
+        <div className="site-menu" ref={menuRef}>
+          <button
+            className="menu-trigger"
+            type="button"
+            ref={triggerRef}
+            aria-expanded={menuOpen}
+            aria-controls="main-navigation"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span className="menu-label">Menu</span>
+            <span className="menu-icon" aria-hidden="true" />
+          </button>
+          <nav id="main-navigation" aria-label="Main navigation" hidden={!menuOpen}>
+            <a href="#help" onClick={() => setMenuOpen(false)}>Assessments</a>
+            <a href="#first-visit" onClick={() => setMenuOpen(false)}>First visit</a>
+            <a href="#visit" onClick={() => setMenuOpen(false)}>Locations</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+  )
+}
+
 function Hero() {
   return (
-    <section className="hero" aria-labelledby="hero-title">
+    <section className="hero" id="top" aria-labelledby="hero-title">
       <div className="hero-content wrap">
         <div className="hero-copy">
           <p className="kicker">Developmental paediatrics in Johannesburg</p>
@@ -316,16 +377,7 @@ export default function App() {
   return (
     <>
       <a className="skip-link" href="#main">Skip to content</a>
-      <header className="site-header" id="top">
-        <div className="wrap nav">
-          <Brand />
-          <nav aria-label="Main navigation">
-            <a href="#help">Assessments</a>
-            <a href="#first-visit">First visit</a>
-            <a href="#visit">Locations</a>
-          </nav>
-        </div>
-      </header>
+      <Header />
       <main id="main" tabIndex={-1}>
         <Hero />
         <div className="care-band">
