@@ -285,10 +285,8 @@ function Footer() {
 }
 
 export default function App() {
-  const [motionPaused, setMotionPaused] = useState(false)
-
   return (
-    <div className="site" data-motion={motionPaused ? 'paused' : undefined}>
+    <>
       <a className="skip-link" href="#main">Skip to content</a>
       <header className="site-header" id="top">
         <div className="wrap nav">
@@ -298,17 +296,7 @@ export default function App() {
             <a href="#first-visit">First visit</a>
             <a href="#visit">Locations</a>
           </nav>
-          <div className="nav-actions">
-            <button
-              className="motion-control"
-              type="button"
-              aria-pressed={motionPaused}
-              onClick={() => setMotionPaused((paused) => !paused)}
-            >
-              Pause motion
-            </button>
-            <a className="button compact" href="#book">Appointments</a>
-          </div>
+          <a className="button compact" href="#book">Appointments</a>
         </div>
       </header>
       <main id="main" tabIndex={-1}>
@@ -327,6 +315,6 @@ export default function App() {
         <Booking />
       </main>
       <Footer />
-    </div>
+    </>
   )
 }
